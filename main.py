@@ -106,9 +106,13 @@ def interactive_mode():
             if not question:
                 continue
             
-            result = engine.query(question)
             print("\n回答:")
-            print(result["answer"])
+            # 使用流式输出
+            full_answer = ""
+            for chunk in engine.query_stream(question):
+                print(chunk, end="", flush=True)
+                full_answer += chunk
+            print()  # 换行
             
         except KeyboardInterrupt:
             print("\n再见!")

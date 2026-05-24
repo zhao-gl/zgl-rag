@@ -87,6 +87,22 @@ class RAGEngine:
             "question": question
         }
 
+    def query_stream(self, question: str):
+        """
+        流式查询知识库
+        
+        Args:
+            question: 用户问题
+            
+        Yields:
+            流式输出的文本片段
+        """
+        # 使用 stream 方法进行流式输出
+        for chunk in self.qa_chain.stream({"input": question}):
+            # 只输出 answer 部分的增量
+            if "answer" in chunk:
+                yield chunk["answer"]
+
     def query_with_sources(self, question: str) -> dict:
         """
         查询知识库并返回来源信息
